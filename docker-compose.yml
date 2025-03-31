@@ -3,6 +3,8 @@ services:
     build: ./backend
     ports:
       - "8000:8000"
+    volumes:
+      - ./backend:/app  # 👈 Mount local code to container
     environment:
       - OPENAI_API_KEY=your-key-here
 
@@ -10,3 +12,5 @@ services:
     build: ./frontend
     ports:
       - "3000:80" # or 5173 if you're using vite preview
+    volumes:
+      - ./frontend:/app  # 👈 Mount local code to container
