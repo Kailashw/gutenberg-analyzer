@@ -15,7 +15,6 @@ export default function InputForm({ onResult }: any) {
         setBookText(res.data.text); // Save it in state
     };
 
-
     return (
         <div>
             <div style={{ marginBottom: "20px" }}>

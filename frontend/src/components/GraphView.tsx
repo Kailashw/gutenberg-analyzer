@@ -1,13 +1,41 @@
-import ForceGraph2D from "react-force-graph-2d";
+import ForceGraph2D from 'react-force-graph-2d';
 
-export default function GraphView({ data }: any) {
+type Node = {
+  id: string;
+};
+
+type Edge = {
+  source: string;
+  target: string;
+  weight?: number;
+};
+
+type GraphData = {
+  nodes: Node[];
+  edges: Edge[];
+};
+
+export default function GraphView({ data }: { data: GraphData }) {
   return (
-    <div style={{ height: "600px" }}>
+    <div style={{ height: "600px", border: "1px solid #ccc", marginTop: "20px" }}>
       <ForceGraph2D
-        graphData={data}
+        graphData={{
+          nodes: data.nodes,
+          links: data.edges
+        }}
         nodeAutoColorBy="id"
-        linkDirectionalParticles="value"
-        linkDirectionalParticleSpeed={(d) => d.weight * 0.001}
+        linkDirectionalParticles={2}
+        linkDirectionalParticleSpeed={(d: any) => d.weight * 0.001}
+        linkCurvature={0.25}
+        linkWidth={(link: any) => link.weight || 1}
+        nodeCanvasObjectMode={() => 'after'}
+        nodeCanvasObject={(node, ctx, globalScale) => {
+          const label = node.id;
+          const fontSize = 12 / globalScale;
+          ctx.font = `${fontSize}px Sans-Serif`;
+          ctx.fillStyle = 'black';
+          ctx.fillText(label, node.x! + 8, node.y! + 8);
+        }}
       />
     </div>
   );

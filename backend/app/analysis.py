@@ -1,10 +1,14 @@
-import requests
 import os
-from openai import OpenAI
+import requests
+from groq import Groq  # ✅ Groq SDK
+from fastapi import HTTPException
+import json
+from dotenv import load_dotenv
+load_dotenv()
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))  # or use groq.com / sambanova
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))  # ✅ Use Groq key
 
-def fetch_book(book_id: int):
+def fetch_book(book_id: int) -> str:
     base_url = f"https://www.gutenberg.org/files/{book_id}/"
     possible_suffixes = [
         f"{book_id}-0.txt",
@@ -14,35 +18,68 @@ def fetch_book(book_id: int):
         f"{book_id}-0.txt.utf-8",
     ]
 
+    print("API_Key:", os.getenv("GROQ_API_KEY"))  # ✅ Debugging line
     for suffix in possible_suffixes:
         url = base_url + suffix
         response = requests.get(url)
-        print(f"Trying URL: {url}")
         if response.status_code == 200:
-            print(response.text)
-        if response.status_code == 200:
-            return JSONResponse(content={"book_id": book_id, "text": response.text})
+            return response.text
 
-    raise HTTPException(status_code=404, detail="Book text not found in any known format")
+    raise HTTPException(status_code=404, detail="Book text not found")
 
+import json
+from groq import Groq
+from fastapi import HTTPException
+
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 def analyze_book(book_id: int):
-    text = fetch_book(book_id)[:10000]  # truncate for simplicity
-    print(text)
-    return {"status": "success", "data": text}
-    prompt = f"""
-    Extract all characters from this book and identify their interactions.
-    Format as:
-    {{
-      "nodes": [{{"id": "Romeo"}}, {{"id": "Juliet"}}],
-      "edges": [{{"source": "Romeo", "target": "Juliet", "weight": 3}}]
-    }}
-    Book:
-    {text}
-    """
+    text = fetch_book(book_id)[:10000]  # Truncate if large
 
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": prompt}]
-    )
-    return response.choices[0].message.content
+    system_message = {
+        "role": "system",
+        "content": (
+            "You are a helpful assistant. Your task is to extract all characters from a book "
+            "and identify their interactions. Respond strictly in a JSON object with the following structure:\n\n"
+            "{\n"
+            '  "nodes": [{"id": "Character1"}, {"id": "Character2"}],\n'
+            '  "edges": [{"source": "Character1", "target": "Character2", "weight": 2}]\n'
+            "}\n\n"
+            "Do not include any explanation or markdown formatting like ```json."
+        )
+    }
+
+    user_message = {
+        "role": "user",
+        "content": f"Analyze the following book excerpt:\n{text}"
+    }
+
+    try:
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[system_message, user_message],
+            temperature=0.5,
+            max_completion_tokens=1024,
+            top_p=1,
+            stop=None,
+            stream=False,
+        )
+
+        response_text = response.choices[0].message.content.strip()
+        print("Raw LLM Response:", response_text)
+
+        parsed = json.loads(response_text)
+        print("Parsed JSON:", parsed)
+        return parsed
+
+    except json.JSONDecodeError as e:
+        print("Error decoding JSON:", e)
+        raise HTTPException(status_code=500, detail="LLM did not return valid JSON")
+
+    except Exception as e:
+        print("GROQ LLM error:", e)
+        raise HTTPException(status_code=500, detail="LLM analysis failed")
+
+
+    
+    

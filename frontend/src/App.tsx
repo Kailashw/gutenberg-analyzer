@@ -1,10 +1,9 @@
 import { useState } from "react";
-import "./index.css";
 import InputForm from "./components/InputForm";
 import GraphView from "./components/GraphView";
 
 function App() {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<any | null>(null);
 
   return (
     <div className="container">
@@ -12,13 +11,8 @@ function App() {
       <InputForm onResult={setData} />
       {data && (
         <>
-          <h2>📊 Character Interaction Graph</h2>
+          <h2>🕸️ Character Interaction Graph</h2>
           <GraphView data={data} />
-
-          <h2>🧾 Raw Analysis Result</h2>
-          <pre style={{ background: "#eee", padding: "1rem", overflowX: "auto" }}>
-            {JSON.stringify(data, null, 2)}
-          </pre>
         </>
       )}
     </div>

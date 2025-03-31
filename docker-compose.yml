@@ -6,7 +6,10 @@ services:
     volumes:
       - ./backend:/app  # 👈 Mount local code to container
     environment:
-      - OPENAI_API_KEY=your-key-here
+      - GROQ_API_KEY=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
+    env_file:
+      - ./backend/.env
+
 
   frontend:
     build: ./frontend
