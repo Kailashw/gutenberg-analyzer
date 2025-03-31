@@ -66,7 +66,7 @@ cd gutenberg-analyzer
 You’ll need an LLM API key:
 
 ```bash
-export OPENAI_API_KEY=your-openai-or-groq-key
+export GROQ_API_KEY=your-groq-key
 ```
 
 > Or use `.env` with Docker
@@ -80,8 +80,9 @@ docker-compose up --build
 ```
 
 - Frontend: [http://localhost:3000](http://localhost:3000)
-- Backend API: [http://localhost:8000/analyze/1787](http://localhost:8000/analyze/1787)
-
+- Backend API:
+   - Analyze: [http://localhost:8000/analyze/1787](http://localhost:8000/analyze/1787)
+   - Get Book Text: [http://localhost:8000/book/1787](http://localhost:8000/analyze/1787)
 ---
 
 ### 🔍 Example Book ID
@@ -124,9 +125,6 @@ uvicorn app.main:app --reload --port 8000
 
 ### ✅ To Do / Bonus Ideas
 
-- [ ] Add quote/sentiment tagging
-- [ ] Export analysis result as JSON
-- [ ] Add search to filter characters
 - [ ] Deploy to Vercel / Fly.io
 
 
