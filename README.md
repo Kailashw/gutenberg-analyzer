@@ -95,8 +95,10 @@ docker-compose up --build
 ### 🖼️ Screenshots
 
 **Input & Graph View**
+<img width="865" alt="Screenshot 2025-03-31 at 3 48 37 PM" src="https://github.com/user-attachments/assets/fbfde091-f1ef-4ff4-a75a-ba9da398c376" />
 
-![image](https://github.com/user-attachments/assets/7cbd1abe-7f50-49a6-87b9-83b0d7e8c946)
+- for Book 1,
+<img width="528" alt="Screenshot 2025-03-31 at 3 48 58 PM" src="https://github.com/user-attachments/assets/b5241bf3-b04e-4f7f-b88f-48cdccdf0b5b" />
 
 
 ---
