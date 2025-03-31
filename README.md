@@ -11,7 +11,6 @@ A full-stack web application that fetches public domain books from [Project Gute
 - Use an **LLM to extract characters and interactions**
 - Visualize interactions using a force-directed graph
 - Display raw analysis result (JSON)
-- Clean, no-Tailwind frontend with plain CSS
 - Backend built with FastAPI
 - Frontend built with React + Vite
 - Dockerized deployment support
