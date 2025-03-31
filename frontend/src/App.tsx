@@ -1,19 +1,41 @@
 import { useState } from "react";
 import InputForm from "./components/InputForm";
 import GraphView from "./components/GraphView";
+import Spinner from "./components/Spinner";
 
 function App() {
-  const [data, setData] = useState<any | null>(null);
-  console.log("Data in App component:", data);
+  const [data, setData] = useState(null);
+  const [bookText, setBookText] = useState("");
+  const [loadingText, setLoadingText] = useState(false);
+
+  const clearState = () => {
+    setData(null);
+    setBookText("");
+    setData(null);
+    setLoadingText(false);
+  };
+
   return (
     <div className="container">
       <h1>📚 Gutenberg Book Analyzer</h1>
-      <InputForm onResult={setData} />
-      {data && data?.length === 0 && (
-        <h2 style={{ color: "red" }}>
-          No data available. Please upload a book file to analyze.
-        </h2>
+      <InputForm
+        onResult={setData}
+        onText={setBookText}
+        setLoadingText={setLoadingText}
+        clear={clearState}
+      />
+
+      {loadingText && <Spinner />}
+
+      {bookText && (
+        <>
+          <h2>📖 Book Text Preview</h2>
+          <pre style={{ maxHeight: "200px", overflowY: "auto", whiteSpace: "pre-wrap" }}>
+            {bookText}
+          </pre>
+        </>
       )}
+
       {data && (
         <>
           <h2>🕸️ Character Interaction Graph</h2>

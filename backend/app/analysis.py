@@ -36,6 +36,7 @@ client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 def analyze_book(book_id: int):
     text = fetch_book(book_id)[:10000]  # Truncate if large
 
+    '''
     system_message = {
         "role": "system",
         "content": (
@@ -48,6 +49,22 @@ def analyze_book(book_id: int):
             "Do not include any explanation or markdown formatting like ```json."
         )
     }
+    '''
+
+    system_message = {
+        "role": "system",
+        "content": (
+            "You are a helpful assistant. Extract all characters from a book and identify their interactions. "
+            "Also include 1–2 key quotes per interaction with brief sentiment labels (positive, negative, neutral). "
+            "Return strictly JSON:\n\n"
+            "{\n"
+            '  "nodes": [{"id": "Character1"}, {"id": "Character2"}],\n'
+            '  "edges": [{"source": "A", "target": "B", "weight": 3, "quotes": ["..."], "sentiment": "positive"}]\n'
+            "}\n"
+            "Do not include any explanation or markdown."
+        )
+    }
+
 
     user_message = {
         "role": "user",
