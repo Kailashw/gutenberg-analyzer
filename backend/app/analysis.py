@@ -12,6 +12,7 @@ def fetch_book(book_id: int) -> str:
 def analyze_book(book_id: int):
     text = fetch_book(book_id)[:10000]  # truncate for simplicity
     print(text)
+    return {"status": "success", "data": text}
     prompt = f"""
     Extract all characters from this book and identify their interactions.
     Format as:
