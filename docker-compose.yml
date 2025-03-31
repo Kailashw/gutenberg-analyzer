@@ -6,7 +6,7 @@ services:
     volumes:
       - ./backend:/app  # 👈 Mount local code to container
     environment:
-      - GROQ_API_KEY=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
+      - GROQ_API_KEY=${GROQ_API_KEY}
     env_file:
       - ./backend/.env
 
