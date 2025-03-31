@@ -7,7 +7,8 @@ export default function InputForm({ onResult }: any) {
 
     const fetchData = async () => {
         const res = await axios.get(`http://localhost:8000/analyze/${bookId}`);
-        onResult(JSON.parse(res.data));
+        onResult(res.data);
+        console.log("Data in InputForm component:",res.data);
     };
 
     const fetchBookText = async () => {
